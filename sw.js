@@ -7,6 +7,7 @@ const archivos = [
   '/css/styles.css',
   'js/app.js',
   'js/apv.js',
+  '/manifest.json'
 ];
 
 
@@ -29,5 +30,8 @@ self.addEventListener('activate', e => {
 
 //Evento fetch para descargar.
 self.addEventListener('fetch', e => {
-  console.log('Fetch...', e);
+  e.respondWith(
+    caches.match(e.request)
+      .then(respuesta =>{return respuesta})
+  )
 });
