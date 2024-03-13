@@ -1,4 +1,4 @@
-const nombreCache = 'apv-v1';
+const nombreCache = 'apv-v4';
 const archivos = [
   '/',
   '/index.html',
@@ -12,7 +12,6 @@ const archivos = [
 
 //Cuando se instala el service worler.
 self.addEventListener('install', e => {
-  console.log('Instalando...');
   e.waitUntil(
     caches.open(nombreCache)
       .then( cache => {
@@ -24,8 +23,15 @@ self.addEventListener('install', e => {
 
 //Cuando se activa el service worker.
 self.addEventListener('activate', e => {
-  console.log('Activado');
-  console.log(e);
+  e.waitUntil(
+    caches.keys()
+      .then(keys => {
+        return Promise.all(
+          keys.filter( key => key !== nombreCache )
+          .map(key => cache.delete(key))
+        );
+      })
+  )
 });
 
 //Evento fetch para descargar.
